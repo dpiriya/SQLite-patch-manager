@@ -1,0 +1,3 @@
+{% extends "base.html" %}
+{% block title %}{{ code }} &middot; My SQLite Patch Manager{% endblock %}
+{% block content %}<section class="error-page"><p class="eyebrow">REQUEST NOT COMPLETED</p><h1>{{ code }}</h1><p>{{ message }}</p><a class="button secondary" href="{{ url_for('index') }}">Return to upload</a></section>{% endblock %}

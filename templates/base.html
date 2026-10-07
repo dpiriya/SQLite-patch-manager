@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>{% block title %}My SQLite Patch Manager{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('index') }}"><span class="brand-mark">S</span><span>SQLite <b>Patch Manager</b></span></a>
+    {% if session.get('job_id') %}<nav><a href="{{ url_for('dashboard') }}">Comparison</a><a href="{{ url_for('changes') }}">Changes</a></nav>{% endif %}
+    <span class="local-badge"><i></i> Local workspace</span>
+  </header>
+  <main class="shell">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}<div class="notices">{% for category, message in messages %}<div class="notice {{ category }}" role="status">{{ message }}</div>{% endfor %}</div>{% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="footer"><span>My SQLite Patch Manager</span><span>Database files stay on this computer</span></footer>
+</body>
+</html>

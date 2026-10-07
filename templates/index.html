@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Upload databases &middot; My SQLite Patch Manager{% endblock %}
+{% block content %}
+<section class="upload-layout">
+  <div class="intro">
+    <p class="eyebrow">DATABASE CHANGE CONTROL</p>
+    <h1>Compare two databases.<br><em>Merge with intent.</em></h1>
+    <p class="lead">Inspect schema and row-level differences between a Patch and a Base database, then create a separate merged copy of Base.</p>
+    <div class="privacy-note"><span class="privacy-icon">&#9679;</span><div><strong>Private by design</strong><span>Runs locally. Uploaded files are never sent to a service.</span></div></div>
+  </div>
+  <section class="upload-panel" aria-labelledby="upload-title">
+    <div class="panel-heading"><div><p class="eyebrow">NEW COMPARISON</p><h2 id="upload-title">Choose databases</h2></div><span class="step-count">01 / 02</span></div>
+    {% if message %}<div class="notice error">{{ message }}</div>{% endif %}
+    <form action="{{ url_for('compare_uploads') }}" method="post" enctype="multipart/form-data" class="upload-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label class="file-field"><span class="file-topline"><span class="field-number">A</span><strong>Patch database</strong></span><span class="file-hint">The changes to compare and apply</span><input type="file" name="patch" accept=".db,.sqlite,.sqlite3,application/vnd.sqlite3" required><span class="file-limit">SQLite file &middot; up to 200 MB</span></label>
+      <label class="file-field"><span class="file-topline"><span class="field-number base-number">B</span><strong>Base database</strong></span><span class="file-hint">The starting point to preserve and update</span><input type="file" name="base" accept=".db,.sqlite,.sqlite3,application/vnd.sqlite3" required><span class="file-limit">SQLite file &middot; up to 200 MB</span></label>
+      <button class="button primary" type="submit">Compare databases <span aria-hidden="true">&rarr;</span></button>
+      <p class="form-footnote">Both originals remain unchanged. Merge output is created separately.</p>
+    </form>
+  </section>
+</section>
+{% endblock %}

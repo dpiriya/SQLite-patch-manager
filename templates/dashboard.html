@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Comparison &middot; My SQLite Patch Manager{% endblock %}
+{% block content %}
+<div class="page-heading">
+  <div><p class="eyebrow">PATCH &rarr; BASE</p><h1>Comparison overview</h1><p class="muted">{{ 'Refreshed against the merged database.' if merged else 'Differences found between the uploaded databases.' }}</p></div>
+  <a class="button quiet" href="{{ url_for('index') }}">New comparison</a>
+</div>
+<section class="db-ribbon" aria-label="Compared databases"><div><span class="db-label">PATCH</span><strong>Patch database</strong><small>Read-only source</small></div><span class="ribbon-arrow">&rarr;</span><div><span class="db-label base-label">BASE{{ ' &middot; MERGED' if merged else '' }}</span><strong>{{ 'Merged database' if merged else 'Base database' }}</strong><small>{{ 'Current result' if merged else 'Original preserved' }}</small></div></section>
+<section class="stats-section">
+  <div class="section-heading"><div><p class="eyebrow">CHANGE SUMMARY</p><h2>Detected changes</h2></div><a class="text-link" href="{{ url_for('changes') }}">Show changes <span>&rarr;</span></a></div>
+  <div class="stat-grid">
+    <div class="stat"><span>Tables added</span><strong>{{ report.stats.tables_added }}</strong><i class="tone-green"></i></div>
+    <div class="stat"><span>Tables changed</span><strong>{{ report.stats.tables_changed }}</strong><i class="tone-blue"></i></div>
+    <div class="stat"><span>Tables deleted</span><strong>{{ report.stats.tables_deleted }}</strong><i class="tone-red"></i></div>
+    <div class="stat"><span>Columns added</span><strong>{{ report.stats.columns_added }}</strong><i class="tone-green"></i></div>
+    <div class="stat"><span>Columns changed</span><strong>{{ report.stats.columns_changed }}</strong><i class="tone-blue"></i></div>
+    <div class="stat"><span>Columns deleted</span><strong>{{ report.stats.columns_deleted }}</strong><i class="tone-red"></i></div>
+    <div class="stat"><span>Rows added</span><strong>{{ report.stats.rows_added }}</strong><i class="tone-green"></i></div>
+    <div class="stat"><span>Rows changed</span><strong>{{ report.stats.rows_changed }}</strong><i class="tone-amber"></i></div>
+    <div class="stat"><span>Rows deleted</span><strong>{{ report.stats.rows_deleted }}</strong><i class="tone-red"></i></div>
+  </div>
+</section>
+<section class="actions-section">
+  <div class="merge-copy"><p class="eyebrow">CONTROLLED MERGE</p><h2>{{ 'Merge another selection' if merged else 'Apply selected changes' }}</h2><p>Choose the change groups to apply. The original Base file will not be modified.</p></div>
+  <form class="merge-form" action="{{ url_for('merge') }}" method="post" onsubmit="return confirm('Create a merged copy of Base with the selected changes?');">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label class="option-row"><input type="checkbox" name="apply_structure"><span><strong>Structure changes</strong><small>Add, alter, or remove tables and columns to match Patch</small></span></label>
+    <label class="option-row"><input type="checkbox" name="apply_updates" checked><span><strong>Row additions and updates</strong><small>Add new rows and update matching primary-key rows</small></span></label>
+    <label class="option-row"><input type="checkbox" name="apply_deletions"><span><strong>Row deletions</strong><small>Remove Base rows whose primary keys are absent from Patch</small></span></label>
+    <div class="merge-actions"><button class="button primary" type="submit">Merge now <span aria-hidden="true">&rarr;</span></button>{% if merged %}<a class="button secondary" href="{{ url_for('download') }}">Download merged database <span aria-hidden="true">&darr;</span></a>{% endif %}</div>
+  </form>
+</section>
+{% endblock %}
